@@ -1,0 +1,115 @@
+﻿@model IEnumerable<ShoppingCarty.Models.ViewModel.CartItemViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AbajuTemplate.cshtml";
+
+}
+@Html.Partial("_topPartial")
+
+<p>
+    @Html.ActionLink("Continue Shopping...", "CartItem", "Item")
+</p>
+<div>
+    @if (ViewBag.Msg != null)
+    {
+        <div align="center" class="alert alert-info">
+
+            <strong><h2>@ViewBag.Msg</h2></strong>
+        </div>
+    }
+    else
+    {
+
+        <table class="table">
+            <tr>
+
+
+                <th>
+                    @Html.DisplayNameFor(model => model.Image)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Item.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ItemPrice)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.Quantity)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SubTotal)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @if (item.Image != null)
+                        {
+                            var base64 = Convert.ToBase64String(item.Image);
+                            var ImgSource = string.Format("data:image/gif;base64,{0}", base64);
+                            <img src="@ImgSource" width="50" height="50" />
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ItemName)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ItemPrice)
+                    </td>
+                    <td>
+
+                        @Html.ActionLink("-", "Minus_1", "Cart", new { id = item.ItemId }, new { @class = "btn btn-default" })
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                        @if (item.TotQ > 0)
+                        {
+                            @Html.ActionLink("+", "Plus_1", "Cart", new { id = item.ItemId }, new { @class = "btn btn-default" })
+                        }
+
+
+
+                    </td>
+
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SubTotal)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Remove Item", "RemoveItem", "Cart", new { id = item.ItemId }, new { @class = "btn btn-danger" })
+                    </td>
+                </tr>
+
+            }
+
+
+        </table>
+
+        <div>@Html.Label("Total Price : ") @ViewBag.Total</div>
+
+    }
+</div>
+
+
+@using (Html.BeginForm("PlaceOrder", "Cart", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Check Out Using Pay fast" class="btn btn-default" />
+        </div>
+    </div>
+}
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
